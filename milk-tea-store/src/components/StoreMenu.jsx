@@ -6,10 +6,12 @@ import './StoreMenu.css';
 function StoreMenu({ storeId }) {
   const productList = productsData.products;
   const [filteredProducts, setFilteredProducts] = useState([]);
-  const [filterText, setFilterText] = useState('');
+  const [filterToppings, setFilterToppings] = useState([]);
   const [originalProducts, setOriginalProducts] = useState([]);
 
-  // Effect to filter products based on the selected store
+  // Topping options, this should ideally be dynamically generated based on products
+  const availableToppings = ["Milk Foam", "White Pearl", "Pearl", "Aloe", "Milk"];
+
   useEffect(() => {
     // Filter products based on the selected storeId
     const storeProducts = storeProductsData.shopProducts
@@ -38,10 +40,26 @@ function StoreMenu({ storeId }) {
   };
 
   const handleFilter = () => {
+    if (filterToppings.length === 0) {
+      setFilteredProducts(originalProducts);
+      return;
+    }
+
     const filtered = originalProducts.filter(product =>
-      product.toppings.toLowerCase().includes(filterText.toLowerCase())
+      filterToppings.every(topping =>
+        product.toppings.toLowerCase().includes(topping.toLowerCase())
+      )
     );
     setFilteredProducts(filtered);
+  };
+
+  const handleToppingChange = (event) => {
+    const topping = event.target.value;
+    if (event.target.checked) {
+      setFilterToppings([...filterToppings, topping]);
+    } else {
+      setFilterToppings(filterToppings.filter(t => t !== topping));
+    }
   };
 
   const stores = ['Ding Tea', 'Tocotoco', 'Gongcha', 'LeeTee'];
@@ -50,24 +68,34 @@ function StoreMenu({ storeId }) {
     <div className="store-menu">
       <h2>{stores[storeId - 1]} Menu</h2>
       <div className="filter-sort">
-        <div>
-          <input
-            type="text"
-            placeholder="Filter by topping"
-            value={filterText}
-            onChange={(e) => setFilterText(e.target.value)}
-            style={{ padding: '10px', marginRight: '10px' }}
-          />
+        <div className="filter-section">
           <button onClick={handleFilter}>Filter</button>
         </div>
-        <div className="sort">
-          <h4>Sort By </h4>
+        <div className="sort-section">
+          <h4>Sort By</h4>
           <select onChange={handleSort}>
             <option value="name-asc">Name (Asc)</option>
             <option value="name-desc">Name (Desc)</option>
             <option value="price-asc">Price (Asc)</option>
             <option value="price-desc">Price (Desc)</option>
           </select>
+        </div>
+      </div>
+      <div className="filter-sort">
+        <div className="filter-section2">
+          <h3>Toppings:</h3>
+          <div className="topping-checkboxes">
+            {availableToppings.map((topping, index) => (
+              <label key={index} className="topping-label">
+                <input
+                  type="checkbox"
+                  value={topping  }
+                  onChange={handleToppingChange}
+                />
+                {topping}
+              </label>
+            ))}
+          </div>
         </div>
       </div>
       <div className="products">

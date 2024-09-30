@@ -85,4 +85,16 @@
     font-weight: bold;
     color: #2f3e57;
   }
-  
+  .filter-section2{
+    margin-bottom: 15px;
+    border: 1px solid #ddd; 
+    padding: 15px; 
+    border-radius: 8px; 
+    background-color: #f9f9f9;
+  }
+  .filter-section2 h3{
+    margin-right: 20px;
+  }
+  .topping-label{
+    margin-right: 25px;
+  }
